@@ -75,3 +75,5 @@ vhs demo-02-ztunnel-metrics.txt
 
 - [ztunnel Transparent Encryption](https://docs.cilium.io/en/v1.20/security/network/encryption-ztunnel/)
 - [Native mTLS with Cilium](https://cilium.io/blog/2026/03/23/native-mtls-cilium/)
+
+Next: [03-more-observability](../03-more-observability/)
