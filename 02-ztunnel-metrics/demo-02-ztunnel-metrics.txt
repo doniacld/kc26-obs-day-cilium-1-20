@@ -1,0 +1,29 @@
+Output demo-02-ztunnel-metrics.gif
+
+
+Set Width 1920
+Set Height 1080
+Set FontSize 22
+Set Theme "Dracula"
+Set WindowBar "Colorful"
+Set BorderRadius 8
+Set Padding 20
+
+Hide
+Type "clear"
+Enter
+Show
+
+Type "./demo.sh"
+Enter
+Sleep 5s
+Enter
+Sleep 30s
+Enter
+Sleep 6s
+Enter
+Sleep 12s
+Enter
+Sleep 30s
+Enter
+Sleep 5s

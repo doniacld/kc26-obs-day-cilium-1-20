@@ -1,0 +1,21 @@
+# Allow empire ships to reach the deathstar on TCP 80. Used as the clean baseline
+# for the audit demo: apply this alone, then the recording applies the explicit
+# deny (cnp.yaml) during the demo.
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "rule1"
+spec:
+  description: "Allow empire ships to reach the deathstar on TCP 80"
+  endpointSelector:
+    matchLabels:
+      org: empire
+      class: deathstar
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            org: empire
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP

@@ -1,0 +1,17 @@
+# Cilium 1.20 values for both demos.
+operator:
+  replicas: 1
+
+hubble:
+  enabled: true
+  relay:
+    enabled: true          # demo 01: hubble observe through the relay
+  ui:
+    enabled: false
+
+encryption:
+  enabled: true
+  type: ztunnel            # demo 02: sidecarless mTLS, enrolled per namespace
+
+prometheus:
+  enabled: true            # demo 02: agent metrics on :9962, incl. cilium_ztunnel_*

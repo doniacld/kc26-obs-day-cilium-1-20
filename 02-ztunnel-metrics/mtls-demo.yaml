@@ -1,0 +1,82 @@
+# Namespace enrolled in ztunnel mTLS, with client and server on different nodes.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mtls-demo
+  labels:
+    io.cilium/mtls-enabled: "true"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: mtls-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: nicolaka/netshoot:latest
+        command: ["python3", "-m", "http.server", "8080"]
+        ports:
+        - containerPort: 8080
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - client
+            topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+  namespace: mtls-demo
+spec:
+  selector:
+    app: server
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  namespace: mtls-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - name: client
+        image: nicolaka/netshoot:latest
+        command: ["sleep", "infinity"]
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - server
+            topologyKey: kubernetes.io/hostname

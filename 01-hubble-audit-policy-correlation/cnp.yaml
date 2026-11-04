@@ -1,0 +1,79 @@
+# The policies the audit demo records. Three of them, so Hubble has one policy to
+# name in each direction and for each outcome:
+#
+#   rule1         ingress allow -> INGRESS ALLOWED BY rule1         (ingress_allowed_by)
+#   deny-alliance ingress deny  -> INGRESS AUDITED BY deny-alliance (ingress_denied_by)
+#   xwing-egress  egress allow  -> EGRESS ALLOWED BY xwing-egress   (egress_allowed_by)
+#
+# Allow empire ships to reach the deathstar on TCP 80...
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "rule1"
+spec:
+  description: "Allow empire ships to reach the deathstar on TCP 80"
+  endpointSelector:
+    matchLabels:
+      org: empire
+      class: deathstar
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            org: empire
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+---
+# ...and EXPLICITLY deny alliance ships. Hubble correlates the verdict back to
+# this deny policy because a deny entry was matched. That already worked for
+# enforced denies; what 1.20 adds is the same naming for AUDIT verdicts, which is
+# what this demo records.
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "deny-alliance"
+spec:
+  description: "Explicitly deny alliance ships to the deathstar"
+  endpointSelector:
+    matchLabels:
+      class: deathstar
+  ingressDeny:
+    - fromEndpoints:
+        - matchLabels:
+            org: alliance
+---
+# Egress side of the story, on the xwing itself. Selecting the xwing for egress
+# makes it egress-restricted, so the same flow is evaluated and correlated in BOTH
+# directions: EGRESS ALLOWED BY xwing-egress on the way out, INGRESS AUDITED BY
+# deny-alliance on the way in.
+#
+# The DNS rule is required, not decoration: the demo curls the deathstar by
+# Service FQDN, so once egress is restricted the xwing must still reach kube-dns
+# or the name never resolves and no flow ever arrives at the deathstar.
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "xwing-egress"
+spec:
+  description: "Allow the xwing to reach the deathstar on TCP 80, plus cluster DNS"
+  endpointSelector:
+    matchLabels:
+      org: alliance
+      class: xwing
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            class: deathstar
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
