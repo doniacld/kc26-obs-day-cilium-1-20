@@ -1,7 +1,7 @@
 # 03 - More Observability in 1.20
 
-Smaller observability changes, without a demo: what each one gives you, how to
-turn it on and what to query.
+Demo ConfigMap drift detection in Grafana, plus quick references for the other
+observability changes.
 
 | Feature | Since | PRs |
 |---|---|---|
@@ -15,6 +15,56 @@ Read them on any agent with:
 
 ```bash
 kubectl -n kube-system exec ds/cilium -c cilium-agent -- cilium-dbg metrics list | grep <name>
+```
+
+## Run Demo 3
+
+Complete [00-setup](../00-setup/) first. The setup provisions the **Cilium
+ConfigMap drift detection** dashboard in Grafana. Open it at
+<http://localhost:3000/d/cilium-config-drift/cilium-configmap-drift-detection>
+after starting a Grafana port-forward if needed:
+
+```bash
+kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
+```
+
+In another terminal, with the Cilium CLI installed, run:
+
+```bash
+cd 03-more-observability
+bash demo.sh
+```
+
+The script shows a zero baseline, changes `debug` in `cilium-config` without
+restarting agents, and waits for Prometheus to record a nonzero
+`cilium_drift_checker_config_delta`. Pause on Step 2 to see the Grafana stat
+panels turn red and the per-node graph rise. Press Enter to restore the original
+ConfigMap value; the current value returns to zero and the graph retains the
+spike. The script restores the original value if interrupted.
+
+![Grafana ConfigMap drift dashboard at 1600×1000 while all three agents have unapplied configuration](config-drift-dashboard.png)
+
+## Visual Example
+
+![Demo 3 Step 2 end state: all three agents have unapplied configuration](demo-03-step-2-config-drift.png)
+
+For slides, use these end-state screenshots from the full recording:
+
+| Screen | Screenshot for slides |
+|---|---|
+| Step 1: Baseline | [PNG](demo-03-step-1-baseline.png) |
+| Step 2: Config drift | [PNG](demo-03-step-2-config-drift.png) |
+| Step 3: Restored | [PNG](demo-03-step-3-restored.png) |
+
+The [Grafana drift screenshot](config-drift-dashboard.png) uses a 16:10
+presentation view with taller panels while Step 2 is active.
+
+Regenerate the [full GIF](demo-03-config-drift.gif) and its screenshots with
+[VHS](https://github.com/charmbracelet/vhs):
+
+```bash
+vhs demo-03-config-drift.tape
+../export-presentation-stills.sh 3
 ```
 
 ## Agent start-up metrics
@@ -123,14 +173,15 @@ configDriftDetection:
   ignoredKeys: []      # e.g. [devices] for keys managed elsewhere
 ```
 
-Try it:
+Run the interactive demo above, or inspect the metric directly:
 
 ```bash
-cilium config set debug true --restart=false
 kubectl -n kube-system exec ds/cilium -c cilium-agent -- cilium-dbg metrics list | grep drift_checker
-# cilium_drift_checker_config_delta  1.000000
-kubectl -n kube-system rollout restart ds/cilium   # back to 0
 ```
+
+When a desired configuration change is meant to persist, restart the Cilium
+agents to apply it. Demo 3 instead restores the original desired value, so no
+restart is needed.
 
 **Use cases**: alerting on agents running stale configuration after an upgrade or a config change.
 
