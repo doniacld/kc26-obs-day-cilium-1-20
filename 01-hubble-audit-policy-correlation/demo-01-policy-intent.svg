@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Demo 1: who may reach deathstar?</title>
+  <desc id="desc">When policies are enforced, tiefighter with org=empire may reach deathstar on TCP port 80. Xwing with org=alliance is denied at deathstar ingress. In the audit demo, the deny is logged but not enforced.</desc>
+  <defs>
+    <filter id="card-shadow" x="-10%" y="-15%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#15233b" flood-opacity="0.09"/>
+    </filter>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; }
+      .title { font-size: 58px; font-weight: 700; fill: #17243a; }
+      .subtitle { font-size: 28px; fill: #526074; }
+      .name { font-size: 42px; font-weight: 700; fill: #17243a; }
+      .label { font-size: 27px; fill: #4c5a6d; }
+      .small { font-size: 23px; fill: #647287; }
+      .chip { font-size: 25px; font-weight: 700; }
+      .policy { font-size: 27px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#f5f7fb"/>
+  <text x="110" y="85" font-size="24" font-weight="700" letter-spacing="3" fill="#596a82">DEMO 1 · POLICY INTENT</text>
+  <text x="110" y="157" class="title">Who may reach deathstar?</text>
+  <text x="110" y="204" class="subtitle">Expected ingress behavior when the policies are enforced</text>
+
+  <!-- Traffic paths stay behind the workload cards. -->
+  <path d="M 530 382 C 780 382, 852 499, 1050 499" fill="none" stroke="#1f9a62" stroke-width="12" stroke-linecap="round"/>
+  <path d="M 530 680 C 780 680, 875 562, 1022 562" fill="none" stroke="#d94a4a" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Empire source. -->
+  <rect x="110" y="290" width="420" height="185" rx="22" fill="#ffffff" stroke="#d7dee8" stroke-width="2" filter="url(#card-shadow)"/>
+  <rect x="139" y="318" width="142" height="45" rx="22" fill="#dcf5e8"/>
+  <text x="210" y="348" text-anchor="middle" class="chip" fill="#147b4d">EMPIRE</text>
+  <text x="139" y="417" class="name">tiefighter</text>
+  <text x="139" y="452" class="label">org=empire</text>
+
+  <!-- Alliance source. -->
+  <rect x="110" y="588" width="420" height="185" rx="22" fill="#ffffff" stroke="#d7dee8" stroke-width="2" filter="url(#card-shadow)"/>
+  <rect x="139" y="616" width="158" height="45" rx="22" fill="#fde5e4"/>
+  <text x="218" y="646" text-anchor="middle" class="chip" fill="#b93535">ALLIANCE</text>
+  <text x="139" y="715" class="name">xwing</text>
+  <text x="139" y="750" class="label">org=alliance</text>
+
+  <!-- Destination. -->
+  <rect x="1070" y="420" width="420" height="235" rx="22" fill="#ffffff" stroke="#c7d2e0" stroke-width="2" filter="url(#card-shadow)"/>
+  <rect x="1099" y="447" width="190" height="45" rx="22" fill="#e8efff"/>
+  <text x="1194" y="477" text-anchor="middle" class="chip" fill="#315ca9">DESTINATION</text>
+  <text x="1099" y="548" class="name">deathstar</text>
+  <text x="1099" y="587" class="label">org=empire · class=deathstar</text>
+  <text x="1099" y="626" class="small">TCP port 80</text>
+  <path d="M1036 481 L1065 499 L1036 517 Z" fill="#1f9a62"/>
+
+  <!-- Policy labels and ingress stop. -->
+  <rect x="620" y="301" width="342" height="55" rx="27" fill="#e5f7ee" stroke="#95dcb8" stroke-width="2"/>
+  <text x="791" y="338" text-anchor="middle" class="policy" fill="#147b4d">ALLOW · allow-empire</text>
+  <rect x="615" y="704" width="346" height="55" rx="27" fill="#fdebea" stroke="#efb2af" stroke-width="2"/>
+  <text x="788" y="741" text-anchor="middle" class="policy" fill="#b93535">DENY · deny-alliance</text>
+  <circle cx="1040" cy="562" r="34" fill="#d94a4a" stroke="#ffffff" stroke-width="5"/>
+  <path d="M1027 549 L1053 575 M1053 549 L1027 575" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- The diagram shows policy intent; the demo itself runs in audit mode. -->
+  <rect x="110" y="849" width="1380" height="101" rx="18" fill="#fff4dc" stroke="#edcf82" stroke-width="2"/>
+  <text x="143" y="891" font-size="26" font-weight="700" fill="#7c5720">In Demo 1, deathstar is in Policy Audit Mode.</text>
+  <text x="143" y="928" font-size="25" fill="#7c5720">The alliance deny is logged as AUDIT; xwing traffic still reaches deathstar.</text>
+</svg>

@@ -1,5 +1,4 @@
-Output demo-01-audit-correlation.gif
-
+Output demo-03-config-drift.gif
 
 Set Width 1920
 Set Height 1080
@@ -18,16 +17,6 @@ Type "./demo.sh"
 Enter
 Sleep 12s
 Enter
-Sleep 6s
+Sleep 40s
 Enter
-Sleep 10s
-Enter
-Sleep 12s
-Enter
-Sleep 7s
-Enter
-Sleep 7s
-Enter
-Sleep 7s
-Enter
-Sleep 5s
+Sleep 20s

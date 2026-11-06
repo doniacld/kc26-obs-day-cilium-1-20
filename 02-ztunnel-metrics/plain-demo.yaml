@@ -1,0 +1,80 @@
+# Plain HTTP comparison for demo 02. This namespace is deliberately not enrolled.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: plain-demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: plain-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: nicolaka/netshoot:latest
+        command: ["python3", "-m", "http.server", "8080"]
+        ports:
+        - containerPort: 8080
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - client
+            topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+  namespace: plain-demo
+spec:
+  selector:
+    app: server
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  namespace: plain-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - name: client
+        image: nicolaka/netshoot:latest
+        command: ["sleep", "infinity"]
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - server
+            topologyKey: kubernetes.io/hostname

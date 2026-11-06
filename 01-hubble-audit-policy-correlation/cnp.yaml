@@ -1,7 +1,8 @@
-# The policies the audit demo records. Three of them, so Hubble has one policy to
-# name in each direction and for each outcome:
+# The three traffic-specific namespaced policies the audit demo records. A
+# separate clusterwide empire web-traffic baseline (baseline-allow-ccnp.yaml)
+# also matches the tiefighter ingress flow:
 #
-#   rule1         ingress allow -> INGRESS ALLOWED BY rule1         (ingress_allowed_by)
+#   allow-empire  ingress allow -> INGRESS ALLOWED BY allow-empire  (ingress_allowed_by)
 #   deny-alliance ingress deny  -> INGRESS AUDITED BY deny-alliance (ingress_denied_by)
 #   xwing-egress  egress allow  -> EGRESS ALLOWED BY xwing-egress   (egress_allowed_by)
 #
@@ -9,7 +10,7 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "rule1"
+  name: "allow-empire"
 spec:
   description: "Allow empire ships to reach the deathstar on TCP 80"
   endpointSelector:

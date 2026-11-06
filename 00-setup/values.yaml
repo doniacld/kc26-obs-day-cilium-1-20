@@ -1,4 +1,4 @@
-# Cilium 1.20 values for both demos.
+# Cilium 1.20 values for all three demos.
 operator:
   replicas: 1
 
@@ -7,7 +7,7 @@ hubble:
   relay:
     enabled: true          # demo 01: hubble observe through the relay
   ui:
-    enabled: false
+    enabled: true           # demo 01: browser-based flow exploration
 
 encryption:
   enabled: true

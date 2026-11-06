@@ -20,10 +20,12 @@ Sleep 5s
 Enter
 Sleep 30s
 Enter
-Sleep 6s
+Sleep 25s
 Enter
 Sleep 12s
 Enter
 Sleep 30s
+Enter
+Sleep 15s
 Enter
 Sleep 5s
