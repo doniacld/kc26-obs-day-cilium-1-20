@@ -1,0 +1,31 @@
+# Lightweight in-cluster monitoring for the two Cilium demo dashboards.
+alertmanager:
+  enabled: false
+
+defaultRules:
+  create: false
+
+kubernetesServiceMonitors:
+  enabled: false
+
+grafana:
+  defaultDashboardsEnabled: false
+  persistence:
+    enabled: false
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace: ALL
+
+kubeStateMetrics:
+  enabled: false
+
+nodeExporter:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    retention: 2d
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
