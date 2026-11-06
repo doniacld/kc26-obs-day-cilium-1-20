@@ -1,0 +1,22 @@
+# Clusterwide baseline: empire workloads accept web traffic from other empire
+# workloads across namespaces. The deathstar-specific CNP also matches the
+# demo's TCP 80 request, so Hubble can name both policies.
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: baseline-allow
+spec:
+  description: Allow web traffic between empire workloads across the cluster
+  endpointSelector:
+    matchLabels:
+      org: empire
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            org: empire
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+            - port: "443"
+              protocol: TCP

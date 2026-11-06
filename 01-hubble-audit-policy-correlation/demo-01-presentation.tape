@@ -1,9 +1,9 @@
 Output demo-01-audit-correlation.gif
 
-
 Set Width 1920
 Set Height 1080
-Set FontSize 22
+Set FontSize 28
+Set Framerate 20
 Set Theme "Dracula"
 Set WindowBar "Colorful"
 Set BorderRadius 8
@@ -18,16 +18,14 @@ Type "./demo.sh"
 Enter
 Sleep 12s
 Enter
-Sleep 6s
+Sleep 15s
 Enter
 Sleep 10s
 Enter
 Sleep 12s
 Enter
-Sleep 7s
+Sleep 12s
 Enter
-Sleep 7s
+Sleep 10s
 Enter
-Sleep 7s
-Enter
-Sleep 5s
+Sleep 6s

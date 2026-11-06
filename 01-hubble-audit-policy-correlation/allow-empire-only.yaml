@@ -4,7 +4,7 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "rule1"
+  name: "allow-empire"
 spec:
   description: "Allow empire ships to reach the deathstar on TCP 80"
   endpointSelector:
